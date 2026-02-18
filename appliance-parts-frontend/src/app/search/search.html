@@ -1,0 +1,63 @@
+<h2>Part Search</h2>
+
+<div style="margin: 20px 0;">
+  <input 
+    [(ngModel)]="query" 
+    name="query"
+    placeholder="Enter part number or keyword"
+    (keyup.enter)="search()"
+    style="padding: 10px; width: 300px; font-size: 16px; margin-right: 10px;"
+  />
+  <button 
+    type="button" 
+    (click)="search()"
+    [disabled]="searching || !query.trim()"
+    style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #2196F3; color: white; border: none; border-radius: 4px;"
+  >
+    {{ searching ? 'Searching...' : 'Search' }}
+  </button>
+</div>
+
+<div *ngIf="error" style="padding: 15px; background-color: #ffebee; color: #c62828; margin: 20px 0; border: 2px solid #c62828; border-radius: 4px; font-weight: bold;">
+  <strong>Error:</strong> {{ error }}
+  <br><br>
+  <small style="font-weight: normal;">
+    Troubleshooting steps:
+    <ul style="margin: 10px 0; padding-left: 20px;">
+      <li>Check that the Spring Boot backend is running on http://localhost:8080</li>
+      <li>Open browser Developer Tools (F12) and check the Console tab for detailed error messages</li>
+      <li>Check the Network tab to see if the request is being made and what response is received</li>
+      <li>Verify CORS is configured correctly in the backend</li>
+    </ul>
+  </small>
+</div>
+
+<table border="1" *ngIf="results.length > 0" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+  <thead>
+    <tr style="background-color: #f0f0f0;">
+      <th style="padding: 12px; text-align: left;">Part Number</th>
+      <th style="padding: 12px; text-align: left;">Description</th>
+      <th style="padding: 12px; text-align: left;">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let part of results" style="border-bottom: 1px solid #ddd;">
+      <td style="padding: 12px;"><strong>{{ part.partId }}</strong></td>
+      <td style="padding: 12px;">{{ part.partName }}</td>
+      <td style="padding: 12px;">
+        <button 
+          type="button" 
+          (click)="goToCompare(part.partId)"
+          style="padding: 8px 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 4px;"
+        >
+          Compare Suppliers
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="results.length === 0 && hasSearched && !searching" style="padding: 20px; text-align: center; color: #666;">
+  <p>No results found for "{{ query }}".</p>
+  <p>Try searching by part number (e.g., "WPW10123456") or part name (e.g., "Washer").</p>
+</div>

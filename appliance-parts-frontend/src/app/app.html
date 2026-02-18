@@ -1,0 +1,27 @@
+<nav style="background-color: #2196F3; color: white; padding: 15px; margin-bottom: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+    <h1 style="margin: 0; font-size: 24px;">Appliance Parts Comparison</h1>
+    <div style="display: flex; gap: 20px;">
+      <a routerLink="/" routerLinkActive="active" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 4px;" 
+         [style.background-color]="router.url === '/' ? 'rgba(255,255,255,0.2)' : 'transparent'">
+        Search
+      </a>
+      <a routerLink="/cart" routerLinkActive="active" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 4px;"
+         [style.background-color]="router.url === '/cart' ? 'rgba(255,255,255,0.2)' : 'transparent'">
+        Cart
+      </a>
+      <a routerLink="/quotes" routerLinkActive="active" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 4px;"
+         [style.background-color]="router.url === '/quotes' ? 'rgba(255,255,255,0.2)' : 'transparent'">
+        Saved Quotes
+      </a>
+      <a routerLink="/reports" routerLinkActive="active" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 4px;"
+         [style.background-color]="router.url === '/reports' ? 'rgba(255,255,255,0.2)' : 'transparent'">
+        Reports
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+  <router-outlet></router-outlet>
+</div>

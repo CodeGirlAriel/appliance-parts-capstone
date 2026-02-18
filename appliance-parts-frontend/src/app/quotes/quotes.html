@@ -1,0 +1,125 @@
+<h2>Saved Quotes</h2>
+
+<div *ngIf="loading" style="padding: 20px; text-align: center;">
+  <p>Loading quotes...</p>
+</div>
+
+<div *ngIf="error" style="padding: 15px; background-color: #ffebee; color: #c62828; margin: 20px 0; border: 2px solid #c62828; border-radius: 4px; font-weight: bold;">
+  <strong>Error:</strong> {{ error }}
+</div>
+
+<div *ngIf="successMessage" style="padding: 15px; background-color: #e8f5e9; color: #2e7d32; margin: 20px 0; border: 2px solid #4CAF50; border-radius: 4px; font-weight: bold;">
+  ✓ {{ successMessage }}
+</div>
+
+<table border="1" *ngIf="quotes.length > 0" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+  <thead>
+    <tr style="background-color: #f0f0f0;">
+      <th style="padding: 8px;">Quote ID</th>
+      <th style="padding: 8px;">Part</th>
+      <th style="padding: 8px;">Supplier</th>
+      <th style="padding: 8px;">Quantity</th>
+      <th style="padding: 8px;">Unit Price</th>
+      <th style="padding: 8px;">Subtotal</th>
+      <th style="padding: 8px;">Tax</th>
+      <th style="padding: 8px;">Total</th>
+      <th style="padding: 8px;">Date Created</th>
+      <th style="padding: 8px;">Status</th>
+      <th style="padding: 8px;">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let quote of quotes">
+      <td style="padding: 8px;">{{ quote.orderId }}</td>
+      <td style="padding: 8px;">
+        <div *ngFor="let item of quote.items">
+          <strong>{{ item.part.partId }}</strong><br>
+          <small>{{ item.part.partName }}</small>
+        </div>
+      </td>
+      <td style="padding: 8px;">
+        <div *ngFor="let item of quote.items">
+          {{ item.supplierName || 'N/A' }}
+        </div>
+      </td>
+      <td style="padding: 8px;">
+        <div *ngFor="let item of quote.items">
+          {{ item.quantity }}
+        </div>
+      </td>
+      <td style="padding: 8px;">
+        <div *ngFor="let item of quote.items">
+          ${{ item.unitPrice | number:'1.2-2' }}
+        </div>
+      </td>
+      <td style="padding: 8px;">
+        <div *ngFor="let item of quote.items">
+          ${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}
+        </div>
+      </td>
+      <td style="padding: 8px;">${{ quote.taxAmount | number:'1.2-2' }}</td>
+      <td style="padding: 8px;"><strong>${{ quote.totalAmount | number:'1.2-2' }}</strong></td>
+      <td style="padding: 8px;">{{ quote.createdAt | date:'short' }}</td>
+      <td style="padding: 8px;">{{ quote.status }}</td>
+      <td style="padding: 8px;">
+        <div *ngIf="!editingQuote[quote.orderId]">
+          <button 
+            (click)="startEditQuote(quote)"
+            [disabled]="deleting[quote.orderId] || updating[quote.orderId]"
+            style="padding: 6px 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;"
+            title="Change supplier for this quote"
+          >
+            Update
+          </button>
+          <button 
+            (click)="deleteQuote(quote.orderId)"
+            [disabled]="deleting[quote.orderId] || updating[quote.orderId]"
+            style="padding: 6px 12px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;"
+            [style.opacity]="deleting[quote.orderId] ? '0.6' : '1'"
+            title="Delete this quote"
+          >
+            {{ deleting[quote.orderId] ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+        
+        <div *ngIf="editingQuote[quote.orderId]" style="min-width: 250px;">
+          <div style="margin-bottom: 10px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Select New Supplier:</label>
+            <select 
+              [(ngModel)]="selectedSupplier[quote.orderId]"
+              style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px;"
+            >
+              <option [value]="null">-- Select Supplier --</option>
+              <option *ngFor="let option of supplierOptions[quote.orderId]" [value]="option.partSupplierId">
+                {{ option.supplierName }} - ${{ option.partCost | number:'1.2-2' }} 
+                ({{ option.numInStock }} in stock, {{ option.shippingTime }} days)
+              </option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 5px;">
+            <button 
+              (click)="updateQuoteSupplier(quote)"
+              [disabled]="!selectedSupplier[quote.orderId] || updating[quote.orderId]"
+              style="padding: 6px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; flex: 1;"
+              [style.opacity]="updating[quote.orderId] ? '0.6' : '1'"
+            >
+              {{ updating[quote.orderId] ? 'Updating...' : 'Save' }}
+            </button>
+            <button 
+              (click)="cancelEditQuote(quote.orderId)"
+              [disabled]="updating[quote.orderId]"
+              style="padding: 6px 12px; background-color: #757575; color: white; border: none; border-radius: 4px; cursor: pointer; flex: 1;"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="quotes.length === 0 && !loading" style="padding: 20px; text-align: center;">
+  <p>No saved quotes found.</p>
+  <p><a routerLink="/">Search for parts</a> to create a quote.</p>
+</div>
