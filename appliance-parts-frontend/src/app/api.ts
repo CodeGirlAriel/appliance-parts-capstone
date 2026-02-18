@@ -7,7 +7,7 @@ import { Observable, throwError, timeout, catchError } from 'rxjs';
 })
 export class ApiService {
 
-  private baseUrl = 'https://appliance-parts-backend.onrender.com';
+  private baseUrl = 'https://appliance-parts-capstone.onrender.com';
 
   constructor(private http: HttpClient) {}
 
