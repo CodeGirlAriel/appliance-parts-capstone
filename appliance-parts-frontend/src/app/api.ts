@@ -7,7 +7,7 @@ import { Observable, throwError, timeout, catchError } from 'rxjs';
 })
 export class ApiService {
 
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'https://appliance-parts-backend.onrender.com';
 
   constructor(private http: HttpClient) {}
 
