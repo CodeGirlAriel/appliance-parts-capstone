@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/quotes")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class QuoteController {
 
     private final QuoteService quoteService;

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/parts")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class PartController {
 
     private final PartSearchService partSearchService;
